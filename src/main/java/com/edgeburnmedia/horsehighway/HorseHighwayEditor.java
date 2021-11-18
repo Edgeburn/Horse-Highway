@@ -193,7 +193,6 @@ public class HorseHighwayEditor implements Listener {
 
     @EventHandler
     public void onInventoryMove(final InventoryDragEvent e) {
-        e.getWhoClicked().sendMessage("This counts as an InventoryDragEvent");
         if (!e.getView().getTitle().equals("Horse Highway Editor") || !e.getWhoClicked().hasPermission("horsehighway.editor")) {
             e.setCancelled(true);
         }
