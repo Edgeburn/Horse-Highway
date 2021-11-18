@@ -1,0 +1,6 @@
+# Set the speed at which the horse will travel on a given block.
+# See a list of valid blocks here https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html and enter them exactly as shown, including capitalization
+# Use the format:
+# <block>: <speed in kph>
+BLACK_CONCRETE: 100.0
+YELLOW_CONCRETE: 20.0

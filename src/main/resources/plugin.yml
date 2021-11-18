@@ -1,0 +1,26 @@
+name: HorseHighway
+version: '${project.version}'
+main: com.edgeburnmedia.horsehighway.HorseHighway
+api-version: 1.17
+authors: [ edgeburnmedia ]
+website: https://edgeburnmedia.com
+permissions:
+  horsehighway.reload:
+    description: Use '/horsehighway reload' to reload speed_on_blocks.yml. Does not reload main config
+    default: op
+  horsehighway.use:
+    description: Allow use of HorseHighway
+    default: true
+  horsehighway.editor:
+    description: Open the GUI editor
+    default: op
+  horsehighway.modify:
+    description: Add, modify, and remove entries from speed_on_blocks.yml
+    default: op
+  horsehighway.list:
+    description: List blocks set to modify the speed of horses
+    default: true
+commands:
+  horsehighway:
+    description: Utilities for the Horse Highways plugin
+    usage: §c§lInvalid command. See /horsehighway help for usage information
