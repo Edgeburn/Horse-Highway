@@ -24,7 +24,6 @@ public final class HorseHighway extends JavaPlugin {
         getCommand("horsehighway").setExecutor(new HorseHighwayCommands(this));
         getCommand("horsehighway").setTabCompleter(new HorseHighwayCommandTabCompleter(this));
         getServer().getPluginManager().registerEvents(new HorseHighwayListeners(this), this);
-        getServer().getPluginManager().registerEvents(new HorseHighwayEditor(this), this);
         pluginDescriptionFile = this.getDescription();
 
         // FIXME add ID

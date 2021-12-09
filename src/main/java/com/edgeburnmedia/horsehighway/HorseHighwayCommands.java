@@ -54,17 +54,6 @@ public class HorseHighwayCommands implements CommandExecutor {
                     sender.sendMessage("§c§lNo permission for horsehighway.reload!");
                     return true;
                 }
-            case "editor":
-                sender.sendMessage("§cThe GUI editor is currently a work in progress and is not functional. To access it for debugging purposes, enter §3§l/horsehighway editor debug");
-                // FIXME remove debug argument requirement
-                if (sender instanceof Player && sender.hasPermission("horsehighway.editor") && args[1].equals("debug")) {
-                    HorseHighwayEditor editor = new HorseHighwayEditor(plugin);
-                    editor.openInventory((Player) sender);
-                    return true;
-                } else {
-                    sender.sendMessage("§c§lNo permission for horsehighway.editor!");
-                    return true;
-                }
             case "add", "modify":
                 double speed;
                 if (sender.hasPermission("horsehighway.modify") && args.length == 3) {
