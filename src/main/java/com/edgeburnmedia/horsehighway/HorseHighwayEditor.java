@@ -2,16 +2,12 @@ package com.edgeburnmedia.horsehighway;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /*
@@ -39,18 +35,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class HorseHighwayEditor implements Listener {
     private HorseHighway plugin;
     private final Inventory inventory;
-    private DigitItem hundredsDigitItem;
-    private DigitItem tensDigitItem;
-    private DigitItem onesDigitItem;
     private int hundreds;
     private int tens;
     private int ones;
 
     HorseHighwayEditor(HorseHighway plugin) {
+        hundreds = 0;
+        tens = 0;
+        ones = 0;
+
         this.plugin = plugin;
 
         inventory = Bukkit.createInventory(null, 54, "Horse Highway Editor");
-
 
         initInventory();
     }
@@ -61,10 +57,6 @@ public class HorseHighwayEditor implements Listener {
     }
 
     private void initInventory() {
-        hundredsDigitItem = DigitItem.getDefaultDigitItem(EditorOption.HUNDREDS_DIGIT);
-        tensDigitItem = DigitItem.getDefaultDigitItem(EditorOption.TENS_DIGIT);
-        onesDigitItem = DigitItem.getDefaultDigitItem(EditorOption.ONES_DIGIT);
-
         // insert point border
         inventory.setItem(10, generateItem(Material.GREEN_STAINED_GLASS_PANE, "---"));
         inventory.setItem(18, generateItem(Material.GREEN_STAINED_GLASS_PANE, "---"));
@@ -86,9 +78,9 @@ public class HorseHighwayEditor implements Listener {
         inventory.setItem(getIndexForClickedEditorOption(EditorOption.ACCEPT), generateItem(Material.EMERALD_BLOCK, "§r§a§lAccept"));
 
         // digits
-        inventory.setItem(getIndexForClickedEditorOption(EditorOption.HUNDREDS_DIGIT), hundredsDigitItem);
-        inventory.setItem(getIndexForClickedEditorOption(EditorOption.TENS_DIGIT), tensDigitItem);
-        inventory.setItem(getIndexForClickedEditorOption(EditorOption.ONES_DIGIT), onesDigitItem);
+        inventory.setItem(getIndexForClickedEditorOption(EditorOption.HUNDREDS_DIGIT), DigitItem.getDigitItem(0, EditorOption.HUNDREDS_DIGIT));
+        inventory.setItem(getIndexForClickedEditorOption(EditorOption.TENS_DIGIT), DigitItem.getDigitItem(0, EditorOption.TENS_DIGIT));
+        inventory.setItem(getIndexForClickedEditorOption(EditorOption.ONES_DIGIT), DigitItem.getDigitItem(0, EditorOption.ONES_DIGIT));
     }
 
     private ItemStack generateItem(Material material, String name) {
@@ -105,12 +97,12 @@ public class HorseHighwayEditor implements Listener {
         player.openInventory(this.getInventory());
     }
 
-    public int getValue() {
-        return getHundredsDigitItem().getValue() + getTensDigitItem().getValue() + getOnesDigitItem().getValue();
+    public int getTotalValue() {
+        return DigitItem.getValue(EditorOption.HUNDREDS_DIGIT, hundreds) + DigitItem.getValue(EditorOption.TENS_DIGIT, tens) + DigitItem.getValue(EditorOption.ONES_DIGIT, ones);
     }
 
     private void updateAcceptButton(Inventory inventory, Material material) {
-        String newAcceptItemName = "§r§a§lAccept " + getValue() + " kph for block " + material;
+        String newAcceptItemName = "§r§a§lAccept " + getTotalValue() + " kph for block " + material;
         ItemStack newAcceptItem = new ItemStack(Material.EMERALD_BLOCK, 1);
         ItemMeta meta = newAcceptItem.getItemMeta();
         meta.setDisplayName(newAcceptItemName);
@@ -120,94 +112,107 @@ public class HorseHighwayEditor implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
-
         // checking equality of the inventories directly doesn't seem to work, so checking the titles.
-        // permission check is to prevent a possible
+        // permission check is to prevent a possible exploit where a player can name a chest "Horse Highway Editor"
         if (!e.getView().getTitle().equals("Horse Highway Editor") || !e.getWhoClicked().hasPermission("horsehighway.editor")) {
             return;
         }
 
-//        e.getWhoClicked().sendMessage(String.valueOf(e.getRawSlot()));
         Player player = (Player) e.getWhoClicked();
         EditorOption clickedEditorOption = getClickedEditorOptionFromIndex(e.getRawSlot());
+        Material itemEdited;
+        try {
+            itemEdited = e.getInventory().getItem(getIndexForClickedEditorOption(EditorOption.INSERT_POINT)).getType();
+        } catch (NullPointerException ex) {
+            itemEdited = Material.AIR;
+        }
+        // declare these as separate variables to keep the if statements more readable
+        boolean clickedOnInsertPoint = clickedEditorOption == EditorOption.INSERT_POINT;
+        boolean isClickWithinGUI = e.getRawSlot() <= 53;
 
         // cancel item clicks unless it's in the player inventory or in the insert point
-        if ((clickedEditorOption != EditorOption.INSERT_POINT) && e.getRawSlot() <= 53) {
+        if ((!clickedOnInsertPoint) && isClickWithinGUI) {
             e.setCancelled(true);
-        } else if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
+        } else if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) { // we also don't want any shift clicking
             e.setCancelled(true);
         }
 
-        ItemStack clickedItemStack;
-        DigitItem newDigit;
-        DigitItem oldDigit = null;
-        int enchantLevel = -1;
+        // check if the action is any type of placement inside the inventory GUI unless the space clicked is
+        if (!clickedOnInsertPoint && isClickWithinGUI && isPlacement(e.getAction())) {
+            e.setCancelled(true);
+        }
 
-//        if (e.getInventory().getItem(e.getRawSlot()) != null) {
-//            Bukkit.getServer().broadcastMessage("clicked was not null");
-//            ItemMeta meta;
-//            clickedItemStack = e.getInventory().getItem(e.getRawSlot());
-//            meta = clickedItemStack.getItemMeta();
-//            enchantLevel = meta.getEnchantLevel(Enchantment.DIG_SPEED);
-//            Bukkit.getServer().broadcastMessage("enchant found was " + enchantLevel);
-//        }
-//
-//        Bukkit.getServer().broadcastMessage("after if, enchantLevel is " + enchantLevel);
+        // As of this point it has been guaranteed that the inventory is the editor
+
+        Material materialEdited = e.getInventory().getItem(getIndexForClickedEditorOption(EditorOption.INSERT_POINT)).getType();
 
         switch (clickedEditorOption) {
             case INCREMENT_HUNDREDS:
-                enchantLevel = hundredsDigitItem.getValueFromEnchant();
-                oldDigit = DigitItem.fromValue(enchantLevel, EditorOption.HUNDREDS_DIGIT);
-                newDigit = oldDigit.increment();
-                e.getInventory().setItem(getIndexForClickedEditorOption(EditorOption.HUNDREDS_DIGIT), newDigit);
-                updateDigit(newDigit, EditorOption.HUNDREDS_DIGIT);
+                hundreds = increment(hundreds);
+                e.getInventory().setItem(getIndexForClickedEditorOption(EditorOption.HUNDREDS_DIGIT), DigitItem.getDigitItem(hundreds, EditorOption.HUNDREDS_DIGIT));
                 break;
             case DECREMENT_HUNDREDS:
-                newDigit = oldDigit.decrement();
-                e.getInventory().setItem(getIndexForClickedEditorOption(EditorOption.HUNDREDS_DIGIT), newDigit);
-                updateDigit(newDigit, EditorOption.HUNDREDS_DIGIT);
+                hundreds = decrement(hundreds);
+                e.getInventory().setItem(getIndexForClickedEditorOption(EditorOption.HUNDREDS_DIGIT), DigitItem.getDigitItem(hundreds, EditorOption.HUNDREDS_DIGIT));
                 break;
             case INCREMENT_TENS:
-                newDigit = oldDigit.increment();
-                e.getInventory().setItem(getIndexForClickedEditorOption(EditorOption.TENS_DIGIT), newDigit);
-                updateDigit(newDigit, EditorOption.TENS_DIGIT);
+                tens = increment(tens);
+                e.getInventory().setItem(getIndexForClickedEditorOption(EditorOption.TENS_DIGIT), DigitItem.getDigitItem(tens, EditorOption.TENS_DIGIT));
                 break;
             case DECREMENT_TENS:
-                newDigit = oldDigit.decrement();
-                e.getInventory().setItem(getIndexForClickedEditorOption(EditorOption.TENS_DIGIT), newDigit);
-                updateDigit(newDigit, EditorOption.TENS_DIGIT);
+                tens = decrement(tens);
+                e.getInventory().setItem(getIndexForClickedEditorOption(EditorOption.TENS_DIGIT), DigitItem.getDigitItem(tens, EditorOption.TENS_DIGIT));
                 break;
             case INCREMENT_ONES:
-                newDigit = oldDigit.increment();
-                e.getInventory().setItem(getIndexForClickedEditorOption(EditorOption.ONES_DIGIT), newDigit);
-                updateDigit(newDigit, EditorOption.ONES_DIGIT);
+                ones = increment(ones);
+                e.getInventory().setItem(getIndexForClickedEditorOption(EditorOption.ONES_DIGIT), DigitItem.getDigitItem(ones, EditorOption.ONES_DIGIT));
                 break;
             case DECREMENT_ONES:
-                newDigit = oldDigit.decrement();
-                e.getInventory().setItem(getIndexForClickedEditorOption(EditorOption.ONES_DIGIT), newDigit);
-                updateDigit(newDigit, EditorOption.ONES_DIGIT);
+                ones = decrement(ones);
+                e.getInventory().setItem(getIndexForClickedEditorOption(EditorOption.ONES_DIGIT), DigitItem.getDigitItem(ones, EditorOption.ONES_DIGIT));
                 break;
+            case CANCEL:
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                   e.getView().close();
+                });
+            default:
+                return;
         }
 
+        player.playSound(e.getWhoClicked().getLocation(), "ui.button.click", 1, 1);
+        updateAcceptButton(e.getInventory(), itemEdited);
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        // We need to clear the number stored by the Inventory
+        hundreds = 0;
+        tens = 0;
+        ones = 0;
+    }
+
+    private static boolean isPlacement(InventoryAction action) {
+        boolean isPlacement = false;
+        InventoryAction[] placements = {InventoryAction.PLACE_ALL, InventoryAction.PLACE_SOME, InventoryAction.PLACE_ONE, InventoryAction.MOVE_TO_OTHER_INVENTORY};
+
+        for (InventoryAction inventoryAction : placements) {
+            if (action == inventoryAction) {
+                isPlacement = true;
+            }
+        }
+
+        return isPlacement;
     }
 
     @EventHandler
     public void onInventoryMove(final InventoryDragEvent e) {
-        if (!e.getView().getTitle().equals("Horse Highway Editor") || !e.getWhoClicked().hasPermission("horsehighway.editor")) {
+        if (e.getView().getTitle().equals("Horse Highway Editor")) {
             e.setCancelled(true);
         }
     }
 
     public enum EditorOption {
         INSERT_POINT, INCREMENT_HUNDREDS, DECREMENT_HUNDREDS, INCREMENT_TENS, DECREMENT_TENS, INCREMENT_ONES, DECREMENT_ONES, HUNDREDS_DIGIT, TENS_DIGIT, ONES_DIGIT, CANCEL, ACCEPT
-    }
-
-    private void updateDigit(DigitItem item, EditorOption digit) {
-        switch (digit) {
-            case HUNDREDS_DIGIT -> hundredsDigitItem = item;
-            case TENS_DIGIT -> tensDigitItem = item;
-            case ONES_DIGIT -> onesDigitItem = item;
-        }
     }
 
     private EditorOption getClickedEditorOptionFromIndex(int index) {
@@ -228,7 +233,7 @@ public class HorseHighwayEditor implements Listener {
         };
     }
 
-    private int getIndexForClickedEditorOption(EditorOption option) {
+    private static int getIndexForClickedEditorOption(EditorOption option) {
         return switch (option) {
             case INSERT_POINT -> 19;
             case INCREMENT_HUNDREDS -> 14;
@@ -246,15 +251,19 @@ public class HorseHighwayEditor implements Listener {
         };
     }
 
-    public DigitItem getHundredsDigitItem() {
-        return hundredsDigitItem;
+    private static int increment(int oldValue) {
+        if (oldValue >= 9) {
+            return 0;
+        } else {
+            return oldValue + 1;
+        }
     }
 
-    public DigitItem getTensDigitItem() {
-        return tensDigitItem;
-    }
-
-    public DigitItem getOnesDigitItem() {
-        return onesDigitItem;
+    private static int decrement(int oldValue) {
+        if (oldValue <= 0) {
+            return 9;
+        } else {
+            return oldValue - 1;
+        }
     }
 }
