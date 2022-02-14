@@ -83,19 +83,22 @@ public class HorseSpeedChangeEvent extends Event implements Cancellable {
     }
 
     public double setHorseSpeed() {
-        if (material.isAir()) { // we want to ignore the request to update the horse speed if the block is air, otherwise whenever the horse jumps or goes up or down a slope the speed will revert
+        if (material.isAir()) { // we want to ignore the request to update the horse speed if the block is air,
+                                // otherwise whenever the horse jumps or goes up or down a slope the speed will
+                                // revert
             this.setCancelled(true);
             return getPreviousSpeed();
         }
 
-
         if (!isCancelled()) {
             if (horseManager.getPlugin().getSpeedMap().get(material) != null) {
-                double speed = horseManager.getPlugin().getSpeedMap().get(material); // look up the correct speed from the speed table
+                double speed = horseManager.getPlugin().getSpeedMap().get(material); // look up the correct speed from
+                                                                                     // the speed table
                 HorseSpeedSetterUtil.setHorseSpeedFromKph(horse, speed); // set the speed
                 return speed;
             } else {
-                // the table lookup must have returned null, so we should revert the horses' speed to its default value
+                // the table lookup must have returned null, so we should revert the horses'
+                // speed to its default value
                 HorseSpeedSetterUtil.setHorseSpeedFromGenericMovementSped(horse, horseManager.getDefaultSpeed());
                 return horseManager.getDefaultSpeed();
             }

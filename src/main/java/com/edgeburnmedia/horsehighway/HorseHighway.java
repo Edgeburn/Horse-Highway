@@ -9,12 +9,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
 
 public final class HorseHighway extends JavaPlugin {
+    // FIXME add actual ID
+    private static final int RESOURCE_ID = -1;
     private HashMap<Horse, HorseManager> horseManagers = new HashMap<>();
     private HashMap<Material, Double> speedMap = new HashMap<>();
     private HorseHighwayConfig horseHighwayConfig;
     private SpeedMapper speedMapper;
     private PluginDescriptionFile pluginDescriptionFile;
-
 
     @Override
     public void onEnable() {
@@ -26,8 +27,7 @@ public final class HorseHighway extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new HorseHighwayListeners(this), this);
         pluginDescriptionFile = this.getDescription();
 
-        // FIXME add ID
-        new UpdateChecker(this, -1).getVersion(version -> {
+        new UpdateChecker(this, RESOURCE_ID).getVersion(version -> {
             if (this.getDescription().getVersion().equals(version)) {
                 getLogger().info("There is not a new update available.");
             } else {

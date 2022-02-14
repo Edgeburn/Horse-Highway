@@ -43,7 +43,7 @@ public class SpeedMapper {
         return speedHashMap;
     }
 
-    public boolean isInMap(String material) throws IllegalArgumentException{
+    public boolean isInMap(String material) throws IllegalArgumentException {
         if (Material.matchMaterial(material) != null) {
             return isInMap(Material.matchMaterial(material));
         } else {

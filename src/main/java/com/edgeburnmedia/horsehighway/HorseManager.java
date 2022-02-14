@@ -20,7 +20,8 @@ public class HorseManager {
         this.horse = horse;
         this.plugin = plugin;
         this.rider = rider;
-        this.defaultSpeed = horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getDefaultValue(); // FIXME this is broken
+        this.defaultSpeed = horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getDefaultValue(); // FIXME this is
+                                                                                                    // broken
     }
 
     public void updateSpeed(Material material) {

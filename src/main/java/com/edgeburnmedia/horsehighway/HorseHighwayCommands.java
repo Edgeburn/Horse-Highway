@@ -13,14 +13,14 @@ import java.util.logging.Level;
 public class HorseHighwayCommands implements CommandExecutor {
     private HorseHighway plugin;
     private String help = """
-    §6Horse Highway: Commands
-    - help: Show this help documentation
-    - reload: Reload speed_on_blocks.yml. Does not reload main config!
-    - modify: Modify a block's speed (Usage: /horsehighway modify <block> <new speed>)
-    - add: Add a new block and set it's speed (Usage: /horsehighway add <block> <speed>)
-    - remove: Remove a block from speed_on_blocks.yml (Usage: /horsehighway remove <block>)
-    - list: List blocks and their speeds
-    """;
+            §6Horse Highway: Commands
+            - help: Show this help documentation
+            - reload: Reload speed_on_blocks.yml. Does not reload main config!
+            - modify: Modify a block's speed (Usage: /horsehighway modify <block> <new speed>)
+            - add: Add a new block and set it's speed (Usage: /horsehighway add <block> <speed>)
+            - remove: Remove a block from speed_on_blocks.yml (Usage: /horsehighway remove <block>)
+            - list: List blocks and their speeds
+            """;
 
     /**
      * Executes the given command, returning its success.
@@ -68,12 +68,15 @@ public class HorseHighwayCommands implements CommandExecutor {
                     try {
                         speed = Double.parseDouble(args[2]);
                     } catch (NumberFormatException e) {
-                        sender.sendMessage("§c§lCouldn't recognize \"" + args[2] + "\" as a number. Check server logs for details.");
-                        plugin.getServer().getLogger().log(Level.WARNING, "Couldn't recognize \"" + args[2] + "\" as a number.", e);
+                        sender.sendMessage("§c§lCouldn't recognize \"" + args[2]
+                                + "\" as a number. Check server logs for details.");
+                        plugin.getServer().getLogger().log(Level.WARNING,
+                                "Couldn't recognize \"" + args[2] + "\" as a number.", e);
                         return true;
                     }
                     if (speed > 100.0) {
-                        sender.sendMessage("§6Speeds over 100 can cause server lag or crashing, please be wary!\nI won't stop you from using such speeds, but it isn't my fault if something breaks!");
+                        sender.sendMessage(
+                                "§6Speeds over 100 can cause server lag or crashing, please be wary!\nI won't stop you from using such speeds, but it isn't my fault if something breaks!");
                     }
 
                     plugin.getSpeedMapper().modifyElement(material, speed);
@@ -118,7 +121,5 @@ public class HorseHighwayCommands implements CommandExecutor {
     HorseHighwayCommands(HorseHighway plugin) {
         this.plugin = plugin;
     }
-
-
 
 }

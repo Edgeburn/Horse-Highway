@@ -20,19 +20,21 @@ public class HorseHighwayCommandTabCompleter implements TabCompleter {
     /**
      * Requests a list of possible completions for a command argument.
      *
-     * @param sender  Source of the command.  For players tab-completing a
-     *                command inside of a command block, this will be the player, not
+     * @param sender  Source of the command. For players tab-completing a
+     *                command inside of a command block, this will be the player,
+     *                not
      *                the command block.
      * @param command Command which was executed
      * @param alias   The alias used
      * @param args    The arguments passed to the command, including final
      *                partial argument to be completed and command label
      * @return A List of possible completions for the final argument, or null
-     * to default to the command executor
+     *         to default to the command executor
      */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-//        plugin.getServer().broadcastMessage("args: " + Arrays.toString(args) + " length " + args.length);
+        // plugin.getServer().broadcastMessage("args: " + Arrays.toString(args) + "
+        // length " + args.length);
         List<String> completions = new ArrayList<>();
         List<String> commands = new ArrayList<>();
 
@@ -42,9 +44,10 @@ public class HorseHighwayCommandTabCompleter implements TabCompleter {
                 commands.add("version");
             }
             // FIXME uncomment me when ready
-//            if (sender instanceof Player && sender.hasPermission("horsehighway.editor")) {
-//                commands.add("editor");
-//            }
+            // if (sender instanceof Player && sender.hasPermission("horsehighway.editor"))
+            // {
+            // commands.add("editor");
+            // }
             if (sender.hasPermission("horsehighway.modify")) {
                 commands.add("add");
                 commands.add("remove");
