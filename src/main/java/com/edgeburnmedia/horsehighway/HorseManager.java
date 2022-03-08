@@ -12,7 +12,6 @@ import java.util.HashMap;
 public class HorseManager {
     private Horse horse;
     private HorseHighway plugin;
-    private final double defaultSpeed;
     private Player rider;
     private double speed;
 
@@ -20,8 +19,6 @@ public class HorseManager {
         this.horse = horse;
         this.plugin = plugin;
         this.rider = rider;
-        this.defaultSpeed = horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getDefaultValue(); // FIXME this is
-                                                                                                    // broken
     }
 
     public void updateSpeed(Material material) {
@@ -47,6 +44,6 @@ public class HorseManager {
     }
 
     public double getDefaultSpeed() {
-        return 0.2; // FIXME does not return actual default speed
+        return SpeedConversionUtil.calculateGenericMovementSpeedFromKph(getPlugin().getHorseHighwayConfig().getDefaultSpeedInKph());
     }
 }

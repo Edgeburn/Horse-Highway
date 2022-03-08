@@ -6,6 +6,12 @@ import org.bukkit.Location;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 public class Speedometer {
+    /**
+     * @implNote calculated using a separate client-side speedometer mod's speed
+     *           reading, and the distance given and solving for time using the
+     *           formula speed = distance / time. Probably a better way to do this,
+     *           but this works good enough
+     */
     private static final double TIME_MAGIC_NUMBER = 0.013890542896511;
     // TIME_MAGIC_NUMBER calculated using a separate client-side speedometer mod's
     // speed reading, and the distance given and solving for time using the formula

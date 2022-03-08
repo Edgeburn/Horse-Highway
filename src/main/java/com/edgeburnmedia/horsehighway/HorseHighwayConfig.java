@@ -12,4 +12,8 @@ public class HorseHighwayConfig {
     public boolean showSpeedometer() {
         return plugin.getConfig().getBoolean("showSpeedometer");
     }
+
+    public double getDefaultSpeedInKph() {
+        return plugin.getConfig().getDouble("defaultSpeed");
+    }
 }
