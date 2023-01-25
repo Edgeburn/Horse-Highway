@@ -1,105 +1,106 @@
 package com.edgeburnmedia.horsehighway;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
-
 public class SpeedMapper {
-    private HorseHighway plugin;
-    private FileConfiguration speedMapperConfig;
-    private File speedMapperConfigFile;
 
-    SpeedMapper(HorseHighway plugin) {
-        this.plugin = plugin;
-        createSpeedMapConfig();
-        reloadSpeedMap();
-    }
+	private final HorseHighway plugin;
+	private FileConfiguration speedMapperConfig;
+	private File speedMapperConfigFile;
 
-    public void reloadSpeedMap() {
-        Set<String> speedMapKeys = getSpeedMapperConfig().getKeys(false);
-        Material material;
-        plugin.clearSpeedMap();
-        for (String key : speedMapKeys) {
-            material = Material.valueOf(key);
-            plugin.addToSpeedMap(material, getSpeedMapperConfig().getDouble(key));
-        }
-    }
+	SpeedMapper(HorseHighway plugin) {
+		this.plugin = plugin;
+		createSpeedMapConfig();
+		reloadSpeedMap();
+	}
 
-    public HashMap<String, Double> getConfiguredBlocks() {
-        Set<String> speedMapKeys = getSpeedMapperConfig().getKeys(false);
-        HashMap<String, Double> speedHashMap = new HashMap<>();
+	public void reloadSpeedMap() {
+		Set<String> speedMapKeys = getSpeedMapperConfig().getKeys(false);
+		Material material;
+		plugin.clearSpeedMap();
+		for (String key : speedMapKeys) {
+			material = Material.valueOf(key);
+			plugin.addToSpeedMap(material, getSpeedMapperConfig().getDouble(key));
+		}
+	}
 
-        for (String key : speedMapKeys) {
-            speedHashMap.put(key, getSpeedMapperConfig().getDouble(key));
-        }
+	public HashMap<String, Double> getConfiguredBlocks() {
+		Set<String> speedMapKeys = getSpeedMapperConfig().getKeys(false);
+		HashMap<String, Double> speedHashMap = new HashMap<>();
 
-        return speedHashMap;
-    }
+		for (String key : speedMapKeys) {
+			speedHashMap.put(key, getSpeedMapperConfig().getDouble(key));
+		}
 
-    public boolean isInMap(String material) throws IllegalArgumentException {
-        if (Material.matchMaterial(material) != null) {
-            return isInMap(Material.matchMaterial(material));
-        } else {
-            throw new IllegalArgumentException("No such material " + material + " exists.");
-        }
-    }
+		return speedHashMap;
+	}
 
-    public boolean isInMap(Material material) {
-        return getSpeedMapperConfig().contains(material.name());
-    }
+	public boolean isInMap(String material) throws IllegalArgumentException {
+		if (Material.matchMaterial(material) != null) {
+			return isInMap(Material.matchMaterial(material));
+		} else {
+			throw new IllegalArgumentException("No such material " + material + " exists.");
+		}
+	}
 
-    public void modifyElement(Material material, double speed) {
-        getSpeedMapperConfig().set(material.name(), speed);
-        try {
-            getSpeedMapperConfig().save(speedMapperConfigFile);
-        } catch (IOException e) {
-            plugin.getServer().getLogger().log(Level.SEVERE, "Failed to save config!", e);
-        }
-        reloadSpeedMap();
-    }
+	public boolean isInMap(Material material) {
+		return getSpeedMapperConfig().contains(material.name());
+	}
 
-    public void removeElement(Material material) {
-        getSpeedMapperConfig().set(material.name(), null);
-        try {
-            getSpeedMapperConfig().save(speedMapperConfigFile);
-        } catch (IOException e) {
-            plugin.getServer().getLogger().log(Level.SEVERE, "Failed to save config!", e);
-        }
-        reloadSpeedMap();
-    }
+	public void modifyElement(Material material, double speed) {
+		getSpeedMapperConfig().set(material.name(), speed);
+		try {
+			getSpeedMapperConfig().save(speedMapperConfigFile);
+		} catch (IOException e) {
+			plugin.getServer().getLogger().log(Level.SEVERE, "Failed to save config!", e);
+		}
+		reloadSpeedMap();
+	}
 
-    public void removeElement(String material) throws IllegalArgumentException {
-        if (Material.matchMaterial(material) != null) {
-            removeElement(Material.matchMaterial(material));
-        } else {
-            throw new IllegalArgumentException("No such material " + material + " exists.");
-        }
-    }
+	public void removeElement(Material material) {
+		getSpeedMapperConfig().set(material.name(), null);
+		try {
+			getSpeedMapperConfig().save(speedMapperConfigFile);
+		} catch (IOException e) {
+			plugin.getServer().getLogger().log(Level.SEVERE, "Failed to save config!", e);
+		}
+		reloadSpeedMap();
+	}
 
-    public FileConfiguration getSpeedMapperConfig() {
-        return speedMapperConfig;
-    }
+	public void removeElement(String material) throws IllegalArgumentException {
+		if (Material.matchMaterial(material) != null) {
+			removeElement(Material.matchMaterial(material));
+		} else {
+			throw new IllegalArgumentException("No such material " + material + " exists.");
+		}
+	}
 
-    private void createSpeedMapConfig() {
-        speedMapperConfigFile = new File(plugin.getDataFolder(), "speed_on_blocks.yml");
-        if (!speedMapperConfigFile.exists()) {
-            speedMapperConfigFile.getParentFile().mkdirs();
-            plugin.saveResource("speed_on_blocks.yml", false);
-        }
+	public FileConfiguration getSpeedMapperConfig() {
+		return speedMapperConfig;
+	}
 
-        speedMapperConfig = new YamlConfiguration();
-        try {
-            speedMapperConfig.load(speedMapperConfigFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            Bukkit.getLogger().severe("Failed to load speed_on_blocks.yml config!");
-        }
-    }
+	private void createSpeedMapConfig() {
+		speedMapperConfigFile = new File(plugin.getDataFolder(), "speed_on_blocks.yml");
+		if (!speedMapperConfigFile.exists()) {
+			speedMapperConfigFile.getParentFile().mkdirs();
+			plugin.saveResource("speed_on_blocks.yml", false);
+		}
+
+		speedMapperConfig = new YamlConfiguration();
+		try {
+			speedMapperConfig.load(speedMapperConfigFile);
+		} catch (IOException | InvalidConfigurationException e) {
+			Bukkit.getLogger().severe("Failed to load speed_on_blocks.yml config!");
+		}
+	}
 
 }

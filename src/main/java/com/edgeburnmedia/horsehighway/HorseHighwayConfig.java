@@ -1,19 +1,20 @@
 package com.edgeburnmedia.horsehighway;
 
 public class HorseHighwayConfig {
-    private HorseHighway plugin;
 
-    HorseHighwayConfig(HorseHighway plugin) {
-        this.plugin = plugin;
+	private final HorseHighway plugin;
 
-        plugin.saveDefaultConfig();
-    }
+	HorseHighwayConfig(HorseHighway plugin) {
+		this.plugin = plugin;
 
-    public boolean showSpeedometer() {
-        return plugin.getConfig().getBoolean("showSpeedometer");
-    }
+		plugin.saveDefaultConfig();
+	}
 
-    public double getDefaultSpeedInKph() {
-        return plugin.getConfig().getDouble("defaultSpeed");
-    }
+	public boolean showSpeedometer() {
+		return plugin.getConfig().getBoolean("showSpeedometer");
+	}
+
+	public double getDefaultSpeedInKph() {
+		return plugin.getConfig().getDouble("defaultSpeed");
+	}
 }
