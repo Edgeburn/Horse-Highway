@@ -4,7 +4,7 @@
 
     <groupId>com.edgeburnmedia</groupId>
     <artifactId>HorseHighway</artifactId>
-    <version>beta-4b</version>
+    <version>beta-5</version>
     <packaging>jar</packaging>
 
     <name>HorseHighway</name>
