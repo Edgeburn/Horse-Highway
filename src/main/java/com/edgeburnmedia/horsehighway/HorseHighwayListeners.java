@@ -41,9 +41,7 @@ public class HorseHighwayListeners implements Listener {
 
     @EventHandler
     public void onMount(EntityMountEvent event) {
-        Entity mount = event.getMount();
-        Player rider = (Player) event.getEntity();
-        if (mount.getType() == EntityType.HORSE) {
+        if (event.getEntity() instanceof Player rider && event.getMount() instanceof Horse) {
             plugin.registerHorse((Horse) event.getMount(), rider);
         }
     }
