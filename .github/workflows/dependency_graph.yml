@@ -7,6 +7,7 @@ jobs:
   update_dependency_graph:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3    
     - name: Update dependency graph
       if: github.ref == 'refs/heads/master'
       uses: advanced-security/maven-dependency-submission-action@v2.0.1
