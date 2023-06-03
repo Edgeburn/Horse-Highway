@@ -10,7 +10,8 @@ import org.bukkit.command.CommandSender;
 public class HorseHighwayCommands implements CommandExecutor {
 
 	private final HorseHighway plugin;
-	private final String help = """
+	private final String help =
+		"""
 		§6Horse Highway: Commands
 		- help: Show this help documentation
 		- reload: Reload speed_on_blocks.yml. Does not reload main config!
@@ -66,15 +67,25 @@ public class HorseHighwayCommands implements CommandExecutor {
 					try {
 						speed = Double.parseDouble(args[2]);
 					} catch (NumberFormatException e) {
-						sender.sendMessage("§c§lCouldn't recognize \"" + args[2]
-							+ "\" as a number. Check server logs for details.");
-						plugin.getServer().getLogger().log(Level.WARNING,
-							"Couldn't recognize \"" + args[2] + "\" as a number.", e);
+						sender.sendMessage(
+							"§c§lCouldn't recognize \"" +
+							args[2] +
+							"\" as a number. Check server logs for details."
+						);
+						plugin
+							.getServer()
+							.getLogger()
+							.log(
+								Level.WARNING,
+								"Couldn't recognize \"" + args[2] + "\" as a number.",
+								e
+							);
 						return true;
 					}
 					if (speed > 200.0) {
 						sender.sendMessage(
-							"§6Speeds over 200 can cause glitches, please be wary!\nI won't stop you from using such speeds, but it isn't my fault if something breaks!");
+							"§6Speeds over 200 can cause glitches, please be wary!\nI won't stop you from using such speeds, but it isn't my fault if something breaks!"
+						);
 					}
 
 					plugin.getSpeedMapper().modifyElement(material, speed);
@@ -93,19 +104,23 @@ public class HorseHighwayCommands implements CommandExecutor {
 				}
 			case "list":
 				if (sender.hasPermission("horsehighway.list")) {
-					HashMap<String, Double> configuredBlocksMap = plugin.getSpeedMapper()
+					HashMap<String, Double> configuredBlocksMap = plugin
+						.getSpeedMapper()
 						.getConfiguredBlocks();
 					StringBuilder stringBuilder = new StringBuilder();
 
 					stringBuilder.append("§6-----<Horse Highway Blocks>-----\n");
 
 					stringBuilder.append(
-						"§3Default: " + plugin.getHorseHighwayConfig().getDefaultSpeedInKph()
-							+ "km/h\n");
+						"§3Default: " +
+						plugin.getHorseHighwayConfig().getDefaultSpeedInKph() +
+						"km/h\n"
+					);
 
 					for (String key : configuredBlocksMap.keySet()) {
 						stringBuilder.append(
-							"§3" + key + ": " + configuredBlocksMap.get(key) + " km/h\n");
+							"§3" + key + ": " + configuredBlocksMap.get(key) + " km/h\n"
+						);
 					}
 
 					stringBuilder.append("§6------------------------------");
@@ -125,5 +140,4 @@ public class HorseHighwayCommands implements CommandExecutor {
 	HorseHighwayCommands(HorseHighway plugin) {
 		this.plugin = plugin;
 	}
-
 }

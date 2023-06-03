@@ -32,8 +32,12 @@ public class HorseHighwayCommandTabCompleter implements TabCompleter {
 	 * command executor
 	 */
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command command, String alias,
-		String[] args) {
+	public List<String> onTabComplete(
+		CommandSender sender,
+		Command command,
+		String alias,
+		String[] args
+	) {
 		// plugin.getServer().broadcastMessage("args: " + Arrays.toString(args) + "
 		// length " + args.length);
 		List<String> completions = new ArrayList<>();
@@ -102,11 +106,9 @@ public class HorseHighwayCommandTabCompleter implements TabCompleter {
 	public static boolean isValidBlock(Material material) {
 		String materialName = material.name().toLowerCase(Locale.ROOT);
 		return getMaterialBlocksAsString().contains(materialName);
-
 	}
 
 	public static boolean isValidBlock(String material) {
 		return getMaterialBlocksAsString().contains(material);
 	}
-
 }

@@ -6,7 +6,8 @@ import org.bukkit.entity.Horse;
 public class HorseSpeedSetterUtil {
 
 	public static void setHorseSpeedFromKph(Horse horse, double speedInKph) {
-		horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
+		horse
+			.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
 			.setBaseValue(SpeedConversionUtil.calculateGenericMovementSpeedFromKph(speedInKph));
 	}
 

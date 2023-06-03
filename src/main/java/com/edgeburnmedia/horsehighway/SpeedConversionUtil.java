@@ -9,15 +9,18 @@ public class SpeedConversionUtil {
 	}
 
 	public static double calculateGenericMovementSpeedFromMetresPerSecond(
-		double speedInMetresPerSecond) {
+		double speedInMetresPerSecond
+	) {
 		return speedInMetresPerSecond / GENERIC_MOVEMENT_SPEED_MAGIC_NUMBER;
 	}
 
 	public static double calculateKphFromGenericMovementSpeed(double speedInGenericMovementSpeed) {
-		return round(calculateKphFromMetresPerSecond(
-				speedInGenericMovementSpeed * GENERIC_MOVEMENT_SPEED_MAGIC_NUMBER),
-			1);
-
+		return round(
+			calculateKphFromMetresPerSecond(
+				speedInGenericMovementSpeed * GENERIC_MOVEMENT_SPEED_MAGIC_NUMBER
+			),
+			1
+		);
 	}
 
 	private static double calculateKphFromMetresPerSecond(double speedInMetresPerSecond) {
@@ -45,5 +48,4 @@ public class SpeedConversionUtil {
 		long tmp = Math.round(value);
 		return (double) tmp / factor;
 	}
-
 }

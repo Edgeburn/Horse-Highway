@@ -102,5 +102,4 @@ public class SpeedMapper {
 			Bukkit.getLogger().severe("Failed to load speed_on_blocks.yml config!");
 		}
 	}
-
 }

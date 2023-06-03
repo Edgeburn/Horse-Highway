@@ -13,6 +13,7 @@ public class Speedometer {
 	 * better way to do this, but this works good enough
 	 */
 	private static final double TIME_MAGIC_NUMBER = 0.013890542896511;
+
 	// TIME_MAGIC_NUMBER calculated using a separate client-side speedometer mod's
 	// speed reading, and the distance given and solving for time using the formula
 	// speed = distance / time
@@ -30,9 +31,10 @@ public class Speedometer {
 			speed = distanceMoved / TIME_MAGIC_NUMBER;
 
 			message = "§6§lSpeed: " + SpeedConversionUtil.round(speed, 1) + " km/h";
-			playerMoveEvent.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR,
-				TextComponent.fromLegacyText(message));
-
+			playerMoveEvent
+				.getPlayer()
+				.spigot()
+				.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
 		}
 	}
 }

@@ -19,8 +19,11 @@ public class HorseSpeedChangeEvent extends Event implements Cancellable {
 	private final Material material;
 	private final HorseManager horseManager;
 
-	public HorseSpeedChangeEvent(HorseManager horseManager, Material material,
-		double previousSpeed) {
+	public HorseSpeedChangeEvent(
+		HorseManager horseManager,
+		Material material,
+		double previousSpeed
+	) {
 		this.horseManager = horseManager;
 		this.horse = horseManager.getHorse();
 		this.material = material;
@@ -45,7 +48,8 @@ public class HorseSpeedChangeEvent extends Event implements Cancellable {
 			return speed;
 		} else {
 			return SpeedConversionUtil.calculateKphFromGenericMovementSpeed(
-				horseManager.getDefaultSpeed());
+				horseManager.getDefaultSpeed()
+			);
 		}
 	}
 
@@ -94,22 +98,22 @@ public class HorseSpeedChangeEvent extends Event implements Cancellable {
 
 		if (!isCancelled()) {
 			if (horseManager.getPlugin().getSpeedMap().get(material) != null) {
-				double speed = horseManager.getPlugin().getSpeedMap()
-					.get(material); // look up the correct speed from
+				double speed = horseManager.getPlugin().getSpeedMap().get(material); // look up the correct speed from
 				// the speed table
 				HorseSpeedSetterUtil.setHorseSpeedFromKph(horse, speed); // set the speed
 				return speed;
 			} else {
 				// the table lookup must have returned null, so we should revert the horses'
 				// speed to its default value
-				HorseSpeedSetterUtil.setHorseSpeedFromGenericMovementSped(horse,
-					horseManager.getDefaultSpeed());
+				HorseSpeedSetterUtil.setHorseSpeedFromGenericMovementSped(
+					horse,
+					horseManager.getDefaultSpeed()
+				);
 				return horseManager.getDefaultSpeed();
 			}
 		}
 
 		Bukkit.getLogger().log(Level.SEVERE, "Something went wrong setting the horse speed!");
 		return getPreviousSpeed();
-
 	}
 }

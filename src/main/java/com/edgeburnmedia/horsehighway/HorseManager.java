@@ -20,8 +20,11 @@ public class HorseManager {
 
 	public void updateSpeed(Material material) {
 		if (rider.hasPermission("horsehighway.use")) {
-			HorseSpeedChangeEvent speedChangeEvent = new HorseSpeedChangeEvent(this, material,
-				speed);
+			HorseSpeedChangeEvent speedChangeEvent = new HorseSpeedChangeEvent(
+				this,
+				material,
+				speed
+			);
 			Bukkit.getPluginManager().callEvent(new HorseSpeedChangeEvent(this, material, speed));
 			if (!speedChangeEvent.isCancelled()) {
 				speed = speedChangeEvent.setHorseSpeed();
@@ -43,6 +46,7 @@ public class HorseManager {
 
 	public double getDefaultSpeed() {
 		return SpeedConversionUtil.calculateGenericMovementSpeedFromKph(
-			getPlugin().getHorseHighwayConfig().getDefaultSpeedInKph());
+			getPlugin().getHorseHighwayConfig().getDefaultSpeedInKph()
+		);
 	}
 }

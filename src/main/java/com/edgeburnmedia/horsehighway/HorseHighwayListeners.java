@@ -24,9 +24,13 @@ public class HorseHighwayListeners implements Listener {
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
-   		Entity playerVehicle = event.getPlayer().getVehicle();
-		Material playerStandingOn = event.getPlayer().getLocation().getBlock()
-			.getRelative(BlockFace.DOWN).getType();
+		Entity playerVehicle = event.getPlayer().getVehicle();
+		Material playerStandingOn = event
+			.getPlayer()
+			.getLocation()
+			.getBlock()
+			.getRelative(BlockFace.DOWN)
+			.getType();
 		Material feet = event.getPlayer().getLocation().getBlock().getType();
 		Material speedMaterial;
 
@@ -36,8 +40,7 @@ public class HorseHighwayListeners implements Listener {
 			speedMaterial = playerStandingOn;
 		}
 
-		if (playerVehicle
-			!= null) { // first we want to check that the player's vehicle isn't null, and if it is we
+		if (playerVehicle != null) { // first we want to check that the player's vehicle isn't null, and if it is we
 			// just want to ignore and do nothing further
 			if (plugin.getHorseManagers().containsKey(playerVehicle)) {
 				if (playerVehicle.getType() == EntityType.HORSE) { // now that we know it is not null, we can check if it's a horse
@@ -65,9 +68,11 @@ public class HorseHighwayListeners implements Listener {
 
 	@EventHandler
 	public void onPlayerDismount(EntityDismountEvent event) {
-		if (event.getEntity() instanceof Player rider && event.getDismounted().getType().equals(EntityType.HORSE)) {
+		if (
+			event.getEntity() instanceof Player rider &&
+			event.getDismounted().getType().equals(EntityType.HORSE)
+		) {
 			plugin.deregisterHorse(rider, event.getDismounted());
 		}
 	}
-
 }

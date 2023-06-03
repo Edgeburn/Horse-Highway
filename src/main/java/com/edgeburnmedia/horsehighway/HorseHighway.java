@@ -34,13 +34,14 @@ public final class HorseHighway extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new HorseHighwayListeners(this), this);
 		pluginDescriptionFile = this.getDescription();
 
-		new UpdateChecker(this, RESOURCE_ID).getVersion(version -> {
-			if (this.getDescription().getVersion().equals(version)) {
-				getLogger().info("There is not a new update available.");
-			} else {
-				getLogger().info("There is a new update available.");
-			}
-		});
+		new UpdateChecker(this, RESOURCE_ID)
+			.getVersion(version -> {
+				if (this.getDescription().getVersion().equals(version)) {
+					getLogger().info("There is not a new update available.");
+				} else {
+					getLogger().info("There is a new update available.");
+				}
+			});
 	}
 
 	@Override
@@ -91,7 +92,6 @@ public final class HorseHighway extends JavaPlugin {
 			} else {
 				getLogger().warning("Deregistering horse that is not registered.");
 			}
-
 		}
 	}
 }
