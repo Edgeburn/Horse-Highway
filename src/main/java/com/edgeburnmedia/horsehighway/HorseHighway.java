@@ -3,8 +3,11 @@ package com.edgeburnmedia.horsehighway;
 import java.util.HashMap;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -75,5 +78,20 @@ public final class HorseHighway extends JavaPlugin {
 
 	public PluginDescriptionFile getPluginDescriptionFile() {
 		return pluginDescriptionFile;
+	}
+
+	public void deregisterHorse(Player player, Entity playerVehicle) {
+		if (playerVehicle == null) {
+			return;
+		}
+
+		if (playerVehicle.getType().equals(EntityType.HORSE)) {
+			if (getHorseManagers().containsKey(playerVehicle)) {
+				getHorseManagers().remove(playerVehicle);
+			} else {
+				getLogger().warning("Deregistering horse that is not registered.");
+			}
+
+		}
 	}
 }
