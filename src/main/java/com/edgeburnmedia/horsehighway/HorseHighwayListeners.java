@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 public class HorseHighwayListeners implements Listener {
@@ -57,6 +59,19 @@ public class HorseHighwayListeners implements Listener {
 	public void onMount(EntityMountEvent event) {
 		if (event.getEntity() instanceof Player rider && event.getMount() instanceof Horse) {
 			plugin.registerHorse((Horse) event.getMount(), rider);
+		}
+	}
+
+	@EventHandler
+	public void onPlayerDisconnect(PlayerQuitEvent event) {
+		Entity playerVehicle = event.getPlayer().getVehicle();
+		plugin.deregisterHorse(event.getPlayer(), playerVehicle);
+	}
+
+	@EventHandler
+	public void onPlayerDismount(EntityDismountEvent event) {
+		if (event.getEntity() instanceof Player rider && event.getDismounted().getType().equals(EntityType.HORSE)) {
+			plugin.deregisterHorse(rider, event.getDismounted());
 		}
 	}
 
