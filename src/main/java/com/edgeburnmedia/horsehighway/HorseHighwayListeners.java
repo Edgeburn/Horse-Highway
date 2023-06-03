@@ -1,6 +1,7 @@
 package com.edgeburnmedia.horsehighway;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -21,9 +22,17 @@ public class HorseHighwayListeners implements Listener {
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
-		Entity playerVehicle = event.getPlayer().getVehicle();
+   		Entity playerVehicle = event.getPlayer().getVehicle();
 		Material playerStandingOn = event.getPlayer().getLocation().getBlock()
 			.getRelative(BlockFace.DOWN).getType();
+		Material feet = event.getPlayer().getLocation().getBlock().getType();
+		Material speedMaterial;
+
+		if (!feet.isAir()) {
+			speedMaterial = feet;
+		} else {
+			speedMaterial = playerStandingOn;
+		}
 
 		if (playerVehicle
 			!= null) { // first we want to check that the player's vehicle isn't null, and if it is we
@@ -32,7 +41,7 @@ public class HorseHighwayListeners implements Listener {
 				== EntityType.HORSE) { // now that we know it is not null, we can check if it's
 				// a horse
 				plugin.getHorseManagers().get((Horse) playerVehicle)
-					.updateSpeed(playerStandingOn); // tell the horse
+					.updateSpeed(speedMaterial); // tell the horse
 				// manager to update
 				// the speed with
 				// the block the
