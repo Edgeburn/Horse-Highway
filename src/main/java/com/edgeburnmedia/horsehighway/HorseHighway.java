@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023 Edgeburn Media. All rights reserved.
+ */
+
 package com.edgeburnmedia.horsehighway;
 
 import java.util.HashMap;
@@ -7,7 +11,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 

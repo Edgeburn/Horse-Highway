@@ -1,18 +1,22 @@
+/*
+ * Copyright (c) 2023 Edgeburn Media. All rights reserved.
+ */
+
 package com.edgeburnmedia.horsehighway;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Horse;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 
 public class HorseManager {
 
-	private final Horse horse;
+	private final AbstractHorse horse;
 	private final HorseHighway plugin;
 	private final Player rider;
 	private double speed;
 
-	HorseManager(Horse horse, Player rider, HorseHighway plugin) {
+	HorseManager(AbstractHorse horse, Player rider, HorseHighway plugin) {
 		this.horse = horse;
 		this.plugin = plugin;
 		this.rider = rider;
@@ -32,7 +36,7 @@ public class HorseManager {
 		}
 	}
 
-	public Horse getHorse() {
+	public AbstractHorse getHorse() {
 		return horse;
 	}
 

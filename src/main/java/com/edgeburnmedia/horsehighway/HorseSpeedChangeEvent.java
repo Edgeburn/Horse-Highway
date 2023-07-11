@@ -1,9 +1,13 @@
+/*
+ * Copyright (c) 2023 Edgeburn Media. All rights reserved.
+ */
+
 package com.edgeburnmedia.horsehighway;
 
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Horse;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -12,7 +16,7 @@ import org.bukkit.event.HandlerList;
 public class HorseSpeedChangeEvent extends Event implements Cancellable {
 
 	private static final HandlerList HANDLERS = new HandlerList();
-	private final Horse horse;
+	private final AbstractHorse horse;
 	private boolean isCancelled;
 	private double newSpeed;
 	private final double previousSpeed;
@@ -30,7 +34,7 @@ public class HorseSpeedChangeEvent extends Event implements Cancellable {
 		this.previousSpeed = previousSpeed;
 	}
 
-	public Horse getHorse() {
+	public AbstractHorse getHorse() {
 		return horse;
 	}
 
