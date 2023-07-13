@@ -1,10 +1,13 @@
+/*
+ * Copyright (c) 2023 Edgeburn Media. All rights reserved.
+ */
+
 package com.edgeburnmedia.horsehighway;
 
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -39,20 +42,22 @@ public class HorseHighwayListeners implements Listener {
 			speedMaterial = playerStandingOn;
 		}
 
-		if (playerVehicle != null && playerVehicle.getType().equals(EntityType.HORSE)) { // first we want to check that the player's vehicle isn't null, and if it is we just want to ignore and do nothing further
-			if (plugin.getHorseManagers().containsKey(playerVehicle)) {
-				plugin.getHorseManagers().get((Horse) playerVehicle).updateSpeed(speedMaterial); // tell the horse manager to update the speed with the block the player is currently standing on
+		if (playerVehicle instanceof AbstractHorse vehicle) { // first we want to check that the player's vehicle isn't null, and if it is we just want to ignore and do nothing further
+			if (plugin.getHorseManagers().containsKey(vehicle)) {
+				plugin.getHorseManagers().get(vehicle).updateSpeed(
+					speedMaterial); // tell the horse manager to update the speed with the block the player is currently standing on
 				Speedometer.displaySpeedometer(event, plugin);
 			} else {
-				plugin.registerHorse((Horse) playerVehicle, event.getPlayer());
+				plugin.registerHorse(vehicle, event.getPlayer());
 			}
 		}
 	}
 
 	@EventHandler
 	public void onMount(EntityMountEvent event) {
-		if (event.getEntity() instanceof Player rider && event.getMount() instanceof Horse) {
-			plugin.registerHorse((Horse) event.getMount(), rider);
+		if (event.getEntity() instanceof Player rider
+			&& event.getMount() instanceof AbstractHorse horse) {
+			plugin.registerHorse(horse, rider);
 		}
 	}
 
@@ -66,7 +71,7 @@ public class HorseHighwayListeners implements Listener {
 	public void onPlayerDismount(EntityDismountEvent event) {
 		if (
 			event.getEntity() instanceof Player rider &&
-				event.getDismounted().getType().equals(EntityType.HORSE)
+				event.getDismounted() instanceof AbstractHorse
 		) {
 			plugin.deregisterHorse(rider, event.getDismounted());
 		}

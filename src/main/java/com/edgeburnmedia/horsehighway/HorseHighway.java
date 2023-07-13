@@ -7,9 +7,9 @@ package com.edgeburnmedia.horsehighway;
 import java.util.HashMap;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Material;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,7 +18,7 @@ public final class HorseHighway extends JavaPlugin {
 
 	// FIXME add actual ID
 	private static final int RESOURCE_ID = 100564;
-	private final HashMap<Horse, HorseManager> horseManagers = new HashMap<>();
+	private final HashMap<AbstractHorse, HorseManager> horseManagers = new HashMap<>();
 	private final HashMap<Material, Double> speedMap = new HashMap<>();
 	private HorseHighwayConfig horseHighwayConfig;
 	private SpeedMapper speedMapper;
@@ -52,11 +52,11 @@ public final class HorseHighway extends JavaPlugin {
 		// Plugin shutdown logic
 	}
 
-	public void registerHorse(Horse horse, Player rider) {
+	public void registerHorse(AbstractHorse horse, Player rider) {
 		horseManagers.put(horse, new HorseManager(horse, rider, this));
 	}
 
-	public HashMap<Horse, HorseManager> getHorseManagers() {
+	public HashMap<AbstractHorse, HorseManager> getHorseManagers() {
 		return horseManagers;
 	}
 
