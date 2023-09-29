@@ -5,6 +5,7 @@
 package com.edgeburnmedia.horsehighway;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
@@ -15,8 +16,11 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HorseHighwayListeners implements Listener {
+	private static final List<Material> RAILS = List.of(Material.RAIL, Material.POWERED_RAIL, Material.ACTIVATOR_RAIL, Material.DETECTOR_RAIL);
 
 	HorseHighway plugin;
 
@@ -27,25 +31,28 @@ public class HorseHighwayListeners implements Listener {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Entity playerVehicle = event.getPlayer().getVehicle();
-		Material playerStandingOn = event
+		Block playerStandingOn = event
 			.getPlayer()
 			.getLocation()
 			.getBlock()
-			.getRelative(BlockFace.DOWN)
-			.getType();
-		Material feet = event.getPlayer().getLocation().getBlock().getType();
-		Material speedMaterial;
+			.getRelative(BlockFace.DOWN);
+		Block feet = event.getPlayer().getLocation().getBlock();
+		Block speedBlock;
 
-		if (!feet.isAir()) {
-			speedMaterial = feet;
+		if (!feet.getType().isAir()) {
+			speedBlock = feet;
 		} else {
-			speedMaterial = playerStandingOn;
+			speedBlock = playerStandingOn;
+		}
+
+		if (RAILS.contains(speedBlock.getType())) {
+			speedBlock = speedBlock.getRelative(0, -1, 0);
 		}
 
 		if (playerVehicle instanceof AbstractHorse vehicle) { // first we want to check that the player's vehicle isn't null, and if it is we just want to ignore and do nothing further
 			if (plugin.getHorseManagers().containsKey(vehicle)) {
 				plugin.getHorseManagers().get(vehicle).updateSpeed(
-					speedMaterial); // tell the horse manager to update the speed with the block the player is currently standing on
+					speedBlock); // tell the horse manager to update the speed with the block the player is currently standing on
 				Speedometer.displaySpeedometer(event, plugin);
 			} else {
 				plugin.registerHorse(vehicle, event.getPlayer());

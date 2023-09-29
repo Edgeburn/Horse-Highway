@@ -6,6 +6,7 @@ package com.edgeburnmedia.horsehighway;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 
@@ -52,5 +53,9 @@ public class HorseManager {
 		return SpeedConversionUtil.calculateGenericMovementSpeedFromKph(
 			getPlugin().getHorseHighwayConfig().getDefaultSpeedInKph()
 		);
+	}
+
+	public void updateSpeed(Block speedBlock) {
+		updateSpeed(speedBlock.getType());
 	}
 }
