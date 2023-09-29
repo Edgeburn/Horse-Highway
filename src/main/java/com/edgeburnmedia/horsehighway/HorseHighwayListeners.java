@@ -16,11 +16,28 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HorseHighwayListeners implements Listener {
-	private static final List<Material> RAILS = List.of(Material.RAIL, Material.POWERED_RAIL, Material.ACTIVATOR_RAIL, Material.DETECTOR_RAIL);
+
+	/**
+	 * Materials that should use the block below them for calculating their speed,
+	 * such as rails, snow layers, and torches, since these do not have an entity hitbox (or their
+	 * hitbox is small enough that one would not want these to effect their speed)
+	 */
+	private static final List<Material> IGNORED_MATERIALS = List.of(Material.RAIL,
+		Material.POWERED_RAIL,
+		Material.ACTIVATOR_RAIL,
+		Material.DETECTOR_RAIL,
+		Material.TORCH,
+		Material.WALL_TORCH,
+		Material.REDSTONE_TORCH,
+		Material.REDSTONE_WALL_TORCH,
+		Material.SOUL_TORCH,
+		Material.SOUL_WALL_TORCH,
+		Material.SNOW,
+		Material.STONE_PRESSURE_PLATE // specifically used for TrainCarts intersections
+		);
 
 	HorseHighway plugin;
 
@@ -45,7 +62,7 @@ public class HorseHighwayListeners implements Listener {
 			speedBlock = playerStandingOn;
 		}
 
-		if (RAILS.contains(speedBlock.getType())) {
+		if (IGNORED_MATERIALS.contains(speedBlock.getType())) {
 			speedBlock = speedBlock.getRelative(0, -1, 0);
 		}
 
